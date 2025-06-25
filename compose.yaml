@@ -1,0 +1,27 @@
+services:
+  # HTTPS Reverse Proxy (Apache)
+  reverse_proxy:
+    image: httpd:latest
+    ports:
+      - "443:443"
+    volumes:
+      - ./reverse_proxy/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
+      - ./ssl:/usr/local/apache2/conf/ssl:ro
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  # HTTP-only Backend (Node.js)
+  backend:
+    build: backend
+    ports:
+      - "3000:3000"  # Exposed for direct testing (optional)
+    environment:
+      - NODE_ENV=development
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

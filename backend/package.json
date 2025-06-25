@@ -1,0 +1,15 @@
+{
+  "name": "secure-cookie-demo",
+  "version": "1.0.0",
+  "description": "Demo showing HTTP backend setting secure cookies behind HTTPS proxy",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "keywords": ["cookies", "security", "proxy", "https"],
+  "author": "Demo",
+  "license": "MIT"
+}
