@@ -1,6 +1,9 @@
 const express = require('express');
+const cookies = require("cookie-parser");
 const app = express();
 const port = 3000;
+
+app.use(cookies());
 
 // Middleware to log headers
 app.use((req, res, next) => {
@@ -12,7 +15,7 @@ app.use((req, res, next) => {
     });
     next();
 });
-
+/*
 // Home page - shows current cookies
 app.get('/', (req, res) => {
     const cookies = req.headers.cookie || 'No cookies set';
@@ -111,6 +114,40 @@ app.get('/health', (req, res) => {
         timestamp: new Date().toISOString(),
         protocol: req.headers['x-forwarded-proto'] || 'http'
     });
+});
+*/
+
+app.get('/set-cookie', (req, res) => {
+    const value = Math.random().toString(36).slice(-9)
+    const attrs = {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'Lax',
+    }
+
+    res.cookie('__Host-secure', value, attrs)
+        .cookie('not-secure', value)
+        .redirect(302, '/')
+})
+
+
+app.get('*', (req, res) => {
+    const {
+        protocol,
+        hostname,
+        path,
+        cookies,
+    } = req
+
+    const cookie = JSON.stringify(cookies, null , "  ")
+
+    res.send(`
+        <h1>cookies</h1>
+        <div>
+            <pre><code>${cookie}</code></pre>
+        <div>
+        <div><a href="/set-cookie">set-cookie</a></div>
+    `);
 });
 
 app.listen(port, '0.0.0.0', () => {
